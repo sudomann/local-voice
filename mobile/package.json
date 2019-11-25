@@ -11,9 +11,12 @@
   "dependencies": {
     "@eva-design/eva": "^1.2.0",
     "@ui-kitten/eva-icons": "^4.2.0",
+    "expo-permissions": "^7.0.0",
     "react": "16.9.0",
     "react-native": "0.61.4",
     "react-native-svg": "^9.9.4",
+    "react-native-swift": "^1.2.2",
+    "react-native-track-player": "^1.1.8",
     "react-native-ui-kitten": "^4.2.0",
     "react-native-unimodules": "^0.7.0-rc.4"
   },

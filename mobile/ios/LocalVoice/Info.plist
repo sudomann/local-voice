@@ -53,5 +53,7 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Uses the microphone to record your speech and broadcast over the local network to a server/client.</string>
 </dict>
 </plist>
