@@ -229,6 +229,8 @@ PODS:
     - ReactCommon/jscallinvoker (= 0.61.4)
   - ReactNativeAudioToolkit (2.0.2):
     - React
+  - RNAudioRecord (0.2.2):
+    - React
   - RNSVG (9.13.3):
     - React
   - UMBarCodeScannerInterface (4.0.0)
@@ -281,6 +283,7 @@ DEPENDENCIES:
   - ReactCommon/jscallinvoker (from `../node_modules/react-native/ReactCommon`)
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
   - "ReactNativeAudioToolkit (from `../node_modules/@react-native-community/audio-toolkit`)"
+  - RNAudioRecord (from `../node_modules/react-native-audio-record`)
   - RNSVG (from `../node_modules/react-native-svg`)
   - UMBarCodeScannerInterface (from `../node_modules/unimodules-barcode-scanner-interface/ios`)
   - UMCameraInterface (from `../node_modules/unimodules-camera-interface/ios`)
@@ -363,6 +366,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon"
   ReactNativeAudioToolkit:
     :path: "../node_modules/@react-native-community/audio-toolkit"
+  RNAudioRecord:
+    :path: "../node_modules/react-native-audio-record"
   RNSVG:
     :path: "../node_modules/react-native-svg"
   UMBarCodeScannerInterface:
@@ -435,6 +440,7 @@ SPEC CHECKSUMS:
   React-RCTVibration: 0f76400ee3cec6edb9c125da49fed279340d145a
   ReactCommon: a6a294e7028ed67b926d29551aa9394fd989c24c
   ReactNativeAudioToolkit: 4506c3df44edce0b3a95dfc80853e5c3ca0360a3
+  RNAudioRecord: 162fee3b8fb628773ec704bf0333823125be2ed7
   RNSVG: f6177f8d7c095fada7cfee2e4bb7388ba426064c
   UMBarCodeScannerInterface: d5a6fdc98ed6241225b0a8432a7f4e2b397668bc
   UMCameraInterface: 68870a3197fee85bd5afca5609ba4a5b7257d19d

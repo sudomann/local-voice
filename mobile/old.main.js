@@ -9,16 +9,12 @@ import {
   TabView,
   Input,
 } from 'react-native-ui-kitten';
-import AudioRecord from 'react-native-audio-record';
-import {Buffer} from 'buffer';
+import {Player} from '@react-native-community/audio-toolkit';
 
-const options = {
-  sampleRate: 44100, // default 44100
-  channels: 1, // 1 or 2, default 1
-  bitsPerSample: 16, // 8 or 16, default 16
-  //audioSource: 6, // android only (it seems this blocks ios)
-  wavFile: 'test.wav', // default 'audio.wav'
-};
+const HeartIcon = style => <Icon {...style} name="heart" />;
+var p = new Player('http://192.168.1.134:8080/');
+p.looping = true;
+p.volume = 0.5;
 
 export class Main extends React.Component {
   state = {
@@ -30,12 +26,9 @@ export class Main extends React.Component {
   };
 
   async componentDidMount() {
-    AudioRecord.init(options);
-    AudioRecord.start();
-    AudioRecord.on('data', data => {
-      // base64-encoded audio data chunks
-      chunk = Buffer.from(data, 'base64');
-      console.log('this is what `chunk` looks like:', chunk);
+    //this.setState({player: new Player('http://192.168.1.134:8081/')});
+    p.prepare(() => {
+      this.setState({playerStatus: 'ready!'});
     });
   }
 
@@ -44,8 +37,12 @@ export class Main extends React.Component {
     this.setState({selectedIndex});
   };
 
-  onJoin = () => {};
-  onQuit = () => {};
+  onJoin = () => {
+    p.play();
+  };
+  onQuit = () => {
+    p.pause();
+  };
   onStartHosting = () => {};
 
   onChangeHost = value => {
@@ -65,6 +62,9 @@ export class Main extends React.Component {
 
             <Text appearance="hint" style={styles.text}>
               By Willy Njundong
+            </Text>
+            <Text category="c1" style={styles.text}>
+              Player is: {this.state.playerStatus}
             </Text>
           </Layout>
           <Layout level="3" style={styles.tabContainer}>
