@@ -9,31 +9,26 @@ import {
   TabView,
   Input,
 } from 'react-native-ui-kitten';
-import TrackPlayer from 'react-native-track-player';
+import {Player} from '@react-native-community/audio-toolkit';
 
 const HeartIcon = style => <Icon {...style} name="heart" />;
+var p = new Player('http://192.168.1.134:8080/');
+p.looping = true;
+p.volume = 0.5;
 
 export class Main extends React.Component {
   state = {
     selectedIndex: 0,
     host: undefined,
     port: undefined,
-    mediaState: undefined,
+    playerStatus: 'not ready!',
+    player: undefined,
   };
 
   async componentDidMount() {
-    // Creates the player
-    TrackPlayer.setupPlayer().then(async () => {
-      // Adds a track to the queue
-      await TrackPlayer.add({
-        id: 'trackId',
-        url: 'http://192.168.1.134:9999/',
-        title: 'Voice Over Local Network',
-        artist: 'Willy Njundong',
-        album: 'Networking Project',
-        artwork:
-          'https://icon-library.net/images/voice-chat-icon/voice-chat-icon-2.jpg', // Load artwork from the network
-      });
+    //this.setState({player: new Player('http://192.168.1.134:8081/')});
+    p.prepare(() => {
+      this.setState({playerStatus: 'ready!'});
     });
   }
 
@@ -42,16 +37,11 @@ export class Main extends React.Component {
     this.setState({selectedIndex});
   };
 
-  getMediaState = async () => {
-    let state = await TrackPlayer.getState();
-    this.setState({mediaState: state});
-  };
-
   onJoin = () => {
-    TrackPlayer.play();
+    p.play();
   };
   onQuit = () => {
-    TrackPlayer.pause();
+    p.pause();
   };
   onStartHosting = () => {};
 
@@ -74,9 +64,8 @@ export class Main extends React.Component {
               By Willy Njundong
             </Text>
             <Text category="c1" style={styles.text}>
-              Current Media State: {this.state.mediaState}
+              Player is: {this.state.playerStatus}
             </Text>
-            <Button onPress={this.getMediaState}>Update Media Status</Button>
           </Layout>
           <Layout level="3" style={styles.tabContainer}>
             <TabView
