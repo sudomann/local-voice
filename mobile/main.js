@@ -9,11 +9,13 @@ import {
   TabView,
   Input,
 } from 'react-native-ui-kitten';
+import { Audio } from 'expo-av';
 import * as Network from 'expo-network';
 import * as FileSystem from 'expo-file-system';
 import AudioRecord from 'react-native-audio-record';
 import {Buffer} from 'buffer';
 var dgram = require('react-native-udp');
+const soundObject = new Audio.Sound();
 
 const outputFileUri = '/storage/emulated/0/Download/' + 'localVoiceAudio';
 const options = {
@@ -64,10 +66,17 @@ export class Main extends React.Component {
 
     AudioRecord.init(options);
     AudioRecord.start();
-    AudioRecord.on('data', data => {
+    AudioRecord.on('data', async data => {
       //base64-encoded audio data chunks
-      let chunk = Buffer.from(data, 'base64');
-      client.send(chunk, 0, chunk.length, 12345, '0.0.0.0');
+      try {
+        await soundObject.loadAsync({
+          uri:
+            `data:audio/mpeg;base64,${data}`
+        });
+        await soundObject.playAsync();
+      } catch (error) {}
+      //let chunk = Buffer.from(data, 'base64');
+      //client.send(chunk, 0, chunk.length, 12345, '0.0.0.0');
       //console.log('client just sent:', chunk);
     });
   }
