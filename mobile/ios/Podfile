@@ -41,6 +41,8 @@ target 'LocalVoice' do
 
   pod 'RNAudioRecord', :path => '../node_modules/react-native-audio-record'
 
+  pod 'react-native-udp', :path => '../node_modules/react-native-udp'
+
   target 'LocalVoiceTests' do
     inherit! :search_paths
     # Pods for testing

@@ -9,9 +9,13 @@ import {
   TabView,
   Input,
 } from 'react-native-ui-kitten';
+import * as Network from 'expo-network';
+import * as FileSystem from 'expo-file-system';
 import AudioRecord from 'react-native-audio-record';
 import {Buffer} from 'buffer';
+var dgram = require('react-native-udp');
 
+const outputFileUri = '/storage/emulated/0/Download/' + 'localVoiceAudio';
 const options = {
   sampleRate: 44100, // default 44100
   channels: 1, // 1 or 2, default 1
@@ -19,23 +23,52 @@ const options = {
   //audioSource: 6, // android only (it seems this blocks ios)
   wavFile: 'test.wav', // default 'audio.wav'
 };
+var server = dgram.createSocket('udp4');
+var client = dgram.createSocket('udp4');
+
+server.on('error', function(msg, rinfo) {
+  console.log(
+    rinfo,
+    Buffer.from(msg)
+  );
+});
+
+server.on('message', async function(msg, remote) {
+  console.log(remote.address + ':' + remote.port + '\'s message:' + msg);
+  const rcvdmsg = await FileSystem.writeAsStringAsync(outputFileUri, msg, {
+    encoding: FileSystem.EncodingType.Base64,
+  });
+  console.log('writeAsStringAsync() returned',rcvdmsg)
+});
+
+server.on('listening', function() {
+  let socketInfo = server.address();
+  console.log(
+    'UDP Server listening on ' + socketInfo.address + ':' + socketInfo.port,
+  );
+});
 
 export class Main extends React.Component {
   state = {
     selectedIndex: 0,
+    serverStatus: 'Disconnected',
+    readyToHost: true,
     host: undefined,
     port: undefined,
-    playerStatus: 'not ready!',
-    player: undefined,
+    deviceIpAddress: 'To be determined...',
+    socketPort: 'To be determined...',
   };
 
+  
   async componentDidMount() {
+
     AudioRecord.init(options);
     AudioRecord.start();
     AudioRecord.on('data', data => {
-      // base64-encoded audio data chunks
-      chunk = Buffer.from(data, 'base64');
-      console.log('this is what `chunk` looks like:', chunk);
+      //base64-encoded audio data chunks
+      let chunk = Buffer.from(data, 'base64');
+      client.send(chunk, 0, chunk.length, 12345, '0.0.0.0');
+      //console.log('client just sent:', chunk);
     });
   }
 
@@ -46,7 +79,14 @@ export class Main extends React.Component {
 
   onJoin = () => {};
   onQuit = () => {};
-  onStartHosting = () => {};
+  onStartHosting = async () => {
+    this.setState({
+      serverStatus: 'Initiallizing server...',
+      readyToHost: false,
+    });
+
+    server.bind(12345, '0.0.0.0');
+  };
 
   onChangeHost = value => {
     this.setState({host: value});
@@ -67,10 +107,27 @@ export class Main extends React.Component {
               By Willy Njundong
             </Text>
           </Layout>
+    <Text>Writing to {outputFileUri}</Text>
           <Layout level="3" style={styles.tabContainer}>
             <TabView
               selectedIndex={this.state.selectedIndex}
               onSelect={this.onTabSelect}>
+              <Tab title="HOST A VOICE CHAT">
+                <Layout level="4" style={styles.tabContainer}>
+                  <View style={styles.tabContent}>
+                    <Text>IP Address:</Text>
+                    <Text>{this.state.deviceIpAddress}</Text>
+                    <Text>Port:</Text>
+                    <Text>{this.state.socketPort}</Text>
+                    <Text>Status: {this.state.serverStatus}</Text>
+                    <Button
+                      disabled={!this.state.readyToHost}
+                      onPress={this.onStartHosting}>
+                      Start Hosting
+                    </Button>
+                  </View>
+                </Layout>
+              </Tab>
               <Tab title="JOIN A VOICE CHAT">
                 <Layout level="4" style={styles.tabContainer}>
                   <View style={styles.tabContent}>
@@ -86,13 +143,6 @@ export class Main extends React.Component {
                     />
                     <Button onPress={this.onJoin}>Join</Button>
                     <Button onPress={this.onQuit}>Quit</Button>
-                  </View>
-                </Layout>
-              </Tab>
-              <Tab title="HOST A VOICE CHAT">
-                <Layout level="4" style={styles.tabContainer}>
-                  <View style={styles.tabContent}>
-                    <Button onPress={this.onStartHosting}>Start Hosting</Button>
                   </View>
                 </Layout>
               </Tab>
