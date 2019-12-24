@@ -13,16 +13,14 @@
     "@react-native-community/audio-toolkit": "^2.0.2",
     "@ui-kitten/eva-icons": "^4.2.0",
     "buffer": "^5.4.3",
-    "expo-av": "7.0.1",
     "expo-network": "^1.0.0",
-    "expo-permissions": "^7.0.0",
     "react": "16.9.0",
     "react-native": "0.61.4",
     "react-native-audio-record": "^0.2.2",
     "react-native-svg": "^9.9.4",
     "react-native-udp": "^2.6.1",
     "react-native-ui-kitten": "^4.2.0",
-    "react-native-unimodules": "^0.7.0-rc.4"
+    "react-native-unimodules": "0.7.0"
   },
   "devDependencies": {
     "@babel/core": "^7.6.2",
