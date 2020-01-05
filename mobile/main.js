@@ -9,13 +9,13 @@ import {
   TabView,
   Input,
 } from 'react-native-ui-kitten';
-import { Audio } from 'expo-av';
+//import Audio from 'expo-av';
 import * as Network from 'expo-network';
 import * as FileSystem from 'expo-file-system';
 import AudioRecord from 'react-native-audio-record';
 import {Buffer} from 'buffer';
 var dgram = require('react-native-udp');
-const soundObject = new Audio.Sound();
+// const soundObject = new Audio.Sound();
 
 const outputFileUri = '/storage/emulated/0/Download/' + 'localVoiceAudio';
 const options = {
@@ -29,18 +29,15 @@ var server = dgram.createSocket('udp4');
 var client = dgram.createSocket('udp4');
 
 server.on('error', function(msg, rinfo) {
-  console.log(
-    rinfo,
-    Buffer.from(msg)
-  );
+  console.log(rinfo, Buffer.from(msg));
 });
 
 server.on('message', async function(msg, remote) {
-  console.log(remote.address + ':' + remote.port + '\'s message:' + msg);
+  console.log(remote.address + ':' + remote.port + "'s message:" + msg);
   const rcvdmsg = await FileSystem.writeAsStringAsync(outputFileUri, msg, {
     encoding: FileSystem.EncodingType.Base64,
   });
-  console.log('writeAsStringAsync() returned',rcvdmsg)
+  console.log('writeAsStringAsync() returned', rcvdmsg);
 });
 
 server.on('listening', function() {
@@ -61,17 +58,14 @@ export class Main extends React.Component {
     socketPort: 'To be determined...',
   };
 
-  
   async componentDidMount() {
-
     AudioRecord.init(options);
     AudioRecord.start();
     AudioRecord.on('data', async data => {
       //base64-encoded audio data chunks
       try {
         await soundObject.loadAsync({
-          uri:
-            `data:audio/mpeg;base64,${data}`
+          uri: `data:audio/mpeg;base64,${data}`,
         });
         await soundObject.playAsync();
       } catch (error) {}
@@ -116,7 +110,7 @@ export class Main extends React.Component {
               By Willy Njundong
             </Text>
           </Layout>
-    <Text>Writing to {outputFileUri}</Text>
+          <Text>Writing to {outputFileUri}</Text>
           <Layout level="3" style={styles.tabContainer}>
             <TabView
               selectedIndex={this.state.selectedIndex}
